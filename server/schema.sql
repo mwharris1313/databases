@@ -19,7 +19,7 @@ CREATE TABLE messages (
   user_id int NOT NULL,
   room_id int NOT NULL,
   msg_text varchar(255),
-  time_stamp datetime,
+  time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(user_id),
   FOREIGN KEY (room_id) REFERENCES rooms(room_id)
 ) ENGINE = MyISAM;

@@ -4,39 +4,50 @@
 var mysql = require('mysql');
 var request = require("request"); // You might need to npm install the request module!
 var expect = require('../../node_modules/chai/chai').expect;
+var db = require('../db/index.js');
 
 describe("Persistent Node Chat Server", function() {
   var dbConnection;
 
-  beforeEach(function(done) {
-    dbConnection = mysql.createConnection({
-      user: "root",
-      password: "",
-      database: "chat"
+  // beforeEach(function(done) {
+  //   dbConnection = mysql.createConnection({
+  //     user: "root",
+  //     password: "",
+  //     database: "chat"
+  //   });
+  //   dbConnection.connect(
+  //     function(err) {
+  //       if (err) {
+  //         console.error('error connecting: ' + err.stack);
+  //         return;
+  //       }
+
+  //       console.log('connected as id ' + dbConnection.threadId);
+  //     }
+  //   );
+  //   //console.log('dbConnection:', dbConnection);
+  //      var tablename = "messages"; // TODO: fill this out
+
+  //   /* Empty the db table before each test so that multiple tests
+  //    * (or repeated runs of the tests) won't screw each other up: */
+  //   dbConnection.query("truncate " + tablename, done);
+  // });
+
+  // afterEach(function() {
+  //   dbConnection.end();
+  // });
+  it("Dummy Test", function(done) {
+    db.initialize();
+    // console.log(db.addUser('Tim'));
+    // console.log(db.addUser('Sam'));
+
+    db.addValue('users','username','Bill',function(results){
+      console.log(results);
     });
-    dbConnection.connect(
-      function(err) {
-        if (err) {
-          console.error('error connecting: ' + err.stack);
-          return;
-        }
 
-        console.log('connected as id ' + dbConnection.threadId);
-      }
-    );
-    //console.log('dbConnection:', dbConnection);
-       var tablename = "messages"; // TODO: fill this out
-
-    /* Empty the db table before each test so that multiple tests
-     * (or repeated runs of the tests) won't screw each other up: */
-    dbConnection.query("truncate " + tablename, done);
   });
 
-  afterEach(function() {
-    dbConnection.end();
-  });
-
-  it("Should insert posted messages to the DB", function(done) {
+  xit("Should insert posted messages to the DB", function(done) {
     // Post the user to the chat server.
     request({ method: "POST",
               uri: "http://127.0.0.1:3000/classes/users",
