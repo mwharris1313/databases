@@ -14,6 +14,7 @@ var mysql = require('mysql');
   };
 
   var dbConnection;
+  var initialized =  false;
 
   exports.initialize = function(){
     console.log('Running initialize function');
@@ -28,37 +29,48 @@ var mysql = require('mysql');
           console.error('error connecting: ' + err.stack);
           return;
         }
-        console.log('connected as id ' + dbConnection.threadId);
+        console.log('conected as id ' + dbConnection.threadId);
       }
     );
+    initialized = true;
   };
 
 
   exports.getField = function(table,field,lookupfield,lookupvalue,cb){
-    var queryString = "SELECT "+field+" FROM "+ table + " WHERE "+ lookupfield +" = '" + lookupvalue + "';";
+    var queryString = "SELECT "+field+" FROM "+ table + " WHERE "+ lookupfield +" = "+ lookupvalue + ";";
     var queryArgs = [];
     console.log('GET FIELD QUERY',queryString);
     dbConnection.query(queryString, queryArgs, function(err,results){
-      cb.apply(null,results);
+      cb(results);
     });
   };
 
+
   exports.addValue = function(table,field,value,cb){
     var callback = function(results) {
-      if (results === undefined) {
-        var queryString = "INSERT INTO "+table+" ("+field+") VALUES ('" + value + "');";
+      if (results.length === 0) {
+        var queryString = "INSERT INTO "+table+" ("+field+") VALUES (" + value + ");";
         console.log('ADD VALUE QUERY',queryString);
 
         var queryArgs = [];
         dbConnection.query(queryString, queryArgs,function(err,results){
-          cb.apply(null,results);
+          cb(results);
         });
+      } else{
+        cb(results);
       }
     };
-    exports.getField(table,field,field,value,function(err,results){
-      console.log('getField results',results);
-      cb.apply(null,results);
-    });
+    if(field.indexOf(',')>0){
+      callback([]);
+    }else{
+      exports.getField(table,field,field,value,function(results){
+        callback(results);
+      });
+    }
+  };
+
+  exports.escapeString = function (str){
+    return mysql.escape(str);
   };
 
   // exports.addMessage = function(user, message, room, timeStamp){

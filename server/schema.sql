@@ -7,13 +7,13 @@ CREATE TABLE users (
   username varchar(255),
   PRIMARY KEY (user_id)
 
-) ENGINE = MyISAM;
+) ENGINE = InnoDB;
 
 CREATE TABLE rooms (
   room_id int NOT NULL AUTO_INCREMENT,
   roomname varchar(255),
   PRIMARY KEY (room_id)
-) ENGINE = MyISAM;
+) ENGINE = InnoDB;
 
 CREATE TABLE messages (
   user_id int NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE messages (
   time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(user_id),
   FOREIGN KEY (room_id) REFERENCES rooms(room_id)
-) ENGINE = MyISAM;
+) ENGINE = InnoDB;
 
 
 /* Create other tables and define schemas for them here! */
